@@ -1,0 +1,11 @@
+Feature: WeatherPressure
+	In order to obtain the pressure in the website BBC Weather
+	As an user
+	I want to be be able to see the pressure at Reading
+
+Scenario: The pressure at Reading 
+	Given I navigate to BCC Weather
+	And  I get the forcast at Reading
+	And  I see the pressure for today and tomorow
+	When I subtract the two values
+	Then I will print the result to the screen

@@ -1,0 +1,58 @@
+using System;
+using TechTalk.SpecFlow;
+using WeatherBBC;
+using System.Threading;
+
+namespace AcceptanceTests
+{
+    [Binding]
+    public class WeatherPressureSteps : WeatherBase
+    {
+        private int todaysPressureNumber;
+        private int tomorrowsPressureeNumber;
+        private int result;
+
+        [Given(@"I navigate to BCC Weather")]
+        public void GivenINavigateToBCCWeather()
+        {
+            Site.Page<BBCWeatherHomePage>().Visit();
+        }
+        
+        [Given(@"I get the forcast at Reading")]
+        public void GivenIGetTheForcastAtReading()
+        {
+            Site.Page<BBCWeatherHomePage>()._findAForecastBox.SendKeys("Reading");
+            Site.Page<BBCWeatherHomePage>()._searchSuggestion.Click();
+        }
+        
+        [Given(@"I see the pressure for today and tomorow")]
+        public void GivenISeeThePressureForTodayAndTomorow()
+        { 
+            Site.Page<BBCReadingPage>()._tableLink.Click();
+            
+            string todaysPressureText = Site.Page<BBCReadingPage>().GetTodays9pmPressure();
+
+            Site.Page<BBCReadingPage>()._tomorrowTab.Click();
+
+            Thread.Sleep(TimeSpan.FromSeconds(2));
+
+            string tomorrowsPressureText = Site.Page<BBCReadingPage>()._tomorrow9PmPressure.Text;
+
+           
+            todaysPressureNumber = Int32.Parse(todaysPressureText);
+            tomorrowsPressureeNumber = Int32.Parse(tomorrowsPressureText); 
+        }
+        
+        [When(@"I subtract the two values")]
+        public void WhenISubtractTheTwoValues()
+        {
+            result = todaysPressureNumber - tomorrowsPressureeNumber;
+        }
+
+        [Then(@"I will print the result to the screen")]
+        public void ThenIWillPrintTheResultToTheScreen()
+        {
+            Console.WriteLine(result);
+        }
+    }
+}
